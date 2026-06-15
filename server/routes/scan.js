@@ -1,11 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const scanController = require('../controllers/scanController');
+const { scanImage, scanBarcode, getScanHistory, getScanById } = require('../controllers/scanController');
 const authMiddleware = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
-router.post('/image', authMiddleware, scanController.uploadImage);
-router.post('/barcode', authMiddleware, scanController.scanBarcode);
-router.get('/history', authMiddleware, scanController.history);
-router.get('/:id', authMiddleware, scanController.getById);
+// All routes require authentication
+router.use(authMiddleware);
+
+// Routes
+router.post('/image', upload.single('image'), scanImage);
+router.post('/barcode', scanBarcode);
+router.get('/history', getScanHistory);
+router.get('/:id', getScanById);
 
 module.exports = router;

@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const searchController = require('../controllers/searchController');
+const { searchProducts, getCategories } = require('../controllers/searchController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', searchController.search); // ?q=name
-router.get('/categories', searchController.categories);
+// All routes require authentication
+router.use(authMiddleware);
+
+// Routes
+router.get('/', searchProducts);
+router.get('/categories', getCategories);
 
 module.exports = router;
